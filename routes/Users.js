@@ -14,6 +14,6 @@ router.put('/upadateUserDetails/:id', updateUsers)
 
 
 router.get('/getUser/:id', getUserData)
-router.get('/allUsers', getAllUsers)
+router.get('/allUsers?', getAllUsers)
 //test
 module.exports = router;

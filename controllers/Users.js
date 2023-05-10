@@ -91,15 +91,14 @@ exports.login = async (req, res, next) => {
 exports.getAllUsers = async (req, res, next) => {
 
 
-    const {
-        id,
-    } = req.query
+    const id = req.query.id || '';
 
     let findQuery = {}
     if (id != '') {
         findQuery = { _id: id }
     }
-
+    console.log('findQuery', findQuery)
+    console.log('req.query', req.query)
     try {
         const users = await Users.find(findQuery)
 
