@@ -47,11 +47,7 @@ const vehicleSchema = new Schema({
         isInsurance: {
             type: Boolean,
             default: null
-        },
-        isInsurance: {
-            type: Boolean,
-            default: null
-        },
+        }
     },
     image: {
         data: {

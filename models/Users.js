@@ -19,6 +19,28 @@ const userSchema = new Schema({
         default: ""
 
     },
+    address: {
+        streetAdd: {
+            type: String,
+            unique: true,
+            default: ""
+        },
+        city: {
+            type: String,
+            unique: true,
+            default: ""
+        },
+        state: {
+            type: String,
+            unique: true,
+            default: ""
+        },
+        pin: {
+            type: String,
+            unique: true,
+            default: ""
+        },
+    },
     password: {
         type: String,
         trim: true,
@@ -35,20 +57,6 @@ const userSchema = new Schema({
     profilePhoto: {
         type: String,
         default: ""
-    },
-    address: {
-        country: {
-            type: String,
-            default: ""
-        },
-        state: {
-            type: String,
-            default: ""
-        },
-        pin: {
-            type: Number,
-            default: ""
-        }
     },
     phoneNumber: {
         type: Number,

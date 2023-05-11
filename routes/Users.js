@@ -10,7 +10,7 @@ router.post('/login', login)
 
 
 
-router.put('/upadateUserDetails/:id', updateUsers)
+router.put('/upadateUserDetails', updateUsers)
 
 
 router.get('/getUser/:id', getUserData)
