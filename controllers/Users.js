@@ -166,6 +166,8 @@ exports.updateUsers = async (req, res, next) => {
         payload
     } = req.body;
 
+    console.log('req.body', req.body)
+
     const isE = isEmpty(id);
     if (isE)
         return res.status(200).json(isE);
@@ -191,6 +193,7 @@ exports.updateUsers = async (req, res, next) => {
             })
 
         }).catch((err) => {
+            console.log(err)
             return res.status(404).json({
                 error: {
                     errCode: ERRORS.SOMETHING_WRONG,

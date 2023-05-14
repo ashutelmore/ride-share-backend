@@ -7,7 +7,7 @@ exports.createBookings = async (req, res) => {
     const {
         payload
     } = req.body;
-
+    console.log('req.body', req.body)
     if (!payload)
         return res.status(500).json({
             error: {
@@ -82,40 +82,35 @@ exports.updateBookings = async (req, res, next) => {
 
 exports.getBookings = async (req, res, next) => {
 
+    const passangerId = req.query.passangerId || '';
     const driverId = req.query.driverId || '';
     const vehicleId = req.query.vehicleId || '';
     const rideId = req.query.rideId || '';
     const bookingId = req.query.bookingId || '';
 
     let findQuery = {}
-    if (vehicleId != '' && driverId != '') {
+    if (!isEmpty(driverId, rideId)) {
         findQuery = {
             driverId: driverId,
-            vehicleId: vehicleId
+            rideId: rideId
         }
-    } else if (vehicleId != '') {
+    } else if (!isEmpty(passangerId, rideId)) {
         findQuery = {
-            vehicleId: vehicleId,
+            passangerId: passangerId,
+            rideId: rideId
         }
-    } else if (driverId != '') {
+    } else if (!isEmpty(passangerId)) {
         findQuery = {
-            driverId: driverId,
+            passangerId: passangerId
         }
-
-    } else if (rideId != '') {
+    } else if (!isEmpty(bookingId)) {
         findQuery = {
-            rideId: rideId,
-        }
-
-    } else if (bookingId != '') {
-        findQuery = {
-            _id: bookingId,
+            _id: bookingId
         }
     }
 
 
-
-    console.log('findQuery', findQuery)
+    console.log('findQuery booking', findQuery)
     try {
         const resp = await Bookings.find(findQuery)
         if (!resp)

@@ -3,12 +3,12 @@ const mongoose = require('mongoose');
 const bookingSchema = new mongoose.Schema({
   passangerId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'UserDetails',
     required: true
   },
   driverId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
+    ref: 'UserDetails',
     required: true
   },
   vehicleId: {
@@ -23,31 +23,31 @@ const bookingSchema = new mongoose.Schema({
   },
   pickupLocation: {
     type: String,
-    required: true
+    required: true,
+    default: ''
   },
   destination: {
     type: String,
-    required: true
-  },
-  distance: {
-    type: Number,
     required: true,
-    default: 0
+    default: ''
   },
-  duration: {
+  // distance: {
+  //   type: Number,
+  //   default: 0
+  // },
+  // duration: {
+  //   type: Number,
+  //   required: true,
+  //   default: 0
+  // },
+  numSits: {
     type: Number,
-    required: true,
-    default: 0
   },
-  passengers: {
-    type: Number,
-    required: true,
-    default: 1
+  pickupDate: {
+    type: Date,
   },
   pickupTime: {
-    type: Date,
-    required: true,
-    default: Date.now
+    type: String,
   },
   status: {
     type: String,
@@ -56,7 +56,7 @@ const bookingSchema = new mongoose.Schema({
   },
   notes: {
     type: String,
-    default: ''
+    default: 'something'
   }
 }, {
   timestamps: true // Adds createdAt and updatedAt fields

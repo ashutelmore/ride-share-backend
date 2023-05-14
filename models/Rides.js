@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const rideSchema = new mongoose.Schema({
     driverId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        ref: 'UserDetails',
         required: true,
     },
     vehicleId: {
@@ -13,7 +13,7 @@ const rideSchema = new mongoose.Schema({
     },
     passengers: [{
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'UserDetails'
     }],
     pickupLocation: {
         type: String,
@@ -35,10 +35,10 @@ const rideSchema = new mongoose.Schema({
         required: true,
         default: ''
     },
-    duration: {//sec
-        type: Number,
-        default: ''
-    },
+    // duration: {//sec
+    //     type: Number,
+    //     default: ''
+    // },
     pricePerKM: {//sec
         type: Number,
         required: true,
