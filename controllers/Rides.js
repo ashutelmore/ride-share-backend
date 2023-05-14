@@ -1,17 +1,13 @@
 const { ERRORS } = require('../helper/constants');
 const { isEmpty, isInalidMongoDBid } = require('../helper/helper');
-const Posts = require('../models/Posts');
-const Requests = require('../models/Requests');
 const Rides = require('../models/Rides');
-const Meetings = require('../models/Meeting');
-const UserDetails = require('../models/UserDetails');
-const multer = require('multer');
-
-
 exports.createRides = async (req, res) => {
     const {
         payload
     } = req.body;
+
+    console.log('req.body', req.body)
+
 
     if (!payload)
         return res.status(500).json({
@@ -89,7 +85,7 @@ exports.getRides = async (req, res, next) => {
 
     const driverId = req.query.driverId || '';
     const vehicleId = req.query.vehicleId || '';
-    const rideId = req.query.rideId || '';
+    const _id = req.query._id || '';
     const startDate = req.query.startDate || '';
     const endDate = req.query.endDate || '';
 
@@ -110,7 +106,7 @@ exports.getRides = async (req, res, next) => {
 
     } else if (rideId != '') {
         findQuery = {
-            _id: rideId,
+            _id: _id,
         }
     }
 

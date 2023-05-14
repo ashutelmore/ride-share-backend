@@ -1,11 +1,6 @@
 const { ERRORS } = require('../helper/constants');
 const { isEmpty, isInalidMongoDBid } = require('../helper/helper');
-const Posts = require('../models/Posts');
-const Requests = require('../models/Requests');
-const Bookings = require('../models/Bookings');
-const Meetings = require('../models/Meeting');
-const UserDetails = require('../models/UserDetails');
-const multer = require('multer');
+const Bookings = require('../models/Booking');
 
 
 exports.createBookings = async (req, res) => {

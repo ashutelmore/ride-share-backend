@@ -1,17 +1,25 @@
 const { ERRORS } = require('../helper/constants');
 const { isEmpty, isInalidMongoDBid } = require('../helper/helper');
-const Posts = require('../models/Posts');
-const Requests = require('../models/Requests');
 const Vehicles = require('../models/Vehicles');
-const Meetings = require('../models/Meeting');
-const UserDetails = require('../models/UserDetails');
-const multer = require('multer');
-
+const fs = require('file-system');
 
 exports.createVehicles = async (req, res) => {
     const {
         payload
     } = req.body;
+
+    let data = {
+        ...JSON.parse(payload),
+    }
+    if (req.file) {
+        data = {
+            ...data,
+            image: {
+                data: fs.readFileSync(req.file.path),
+                contentType: req.file.mimetype
+            }
+        }
+    }
 
     if (!payload)
         return res.status(500).json({
@@ -21,14 +29,15 @@ exports.createVehicles = async (req, res) => {
             }
         })
 
-    const newData = new Vehicles(payload)
 
-    return await newData.save().then(async (data) => {
+    const newData = new Vehicles(data)
+
+    return await newData.save().then(async (_data) => {
 
 
         res.status(201).json({
             message: 'Vehicles created successfully',
-            payload: data
+            payload: _data
         })
     }).catch((err) => {
         console.log('err', err)
@@ -50,6 +59,8 @@ exports.updateVehicles = async (req, res, next) => {
         id
     } = req.params;
 
+    console.log('req.body', req.body)
+    console.log('req.params', req.params)
     const isE = isEmpty(id);
     if (isE)
         return res.status(200).json(isE);
@@ -58,13 +69,32 @@ exports.updateVehicles = async (req, res, next) => {
     if (isinvalidId)
         return res.status(200).json(isinvalidId)
 
+    if (!payload)
+        return res.status(500).json({
+            error: {
+                errCode: ERRORS.SOMETHING_WRONG,
+                errMessage: "Something went wrong with data"
+            }
+        })
+    let data = {
+        ...JSON.parse(payload),
+    }
+    if (req.file) {
+        data = {
+            ...data,
+            image: {
+                data: fs.readFileSync(req.file.path),
+                contentType: req.file.mimetype
+            }
+        }
+    }
 
     return await Vehicles.findByIdAndUpdate(
         id,
-        { ...payload },
-        { new: true }).then(async (data) => {
+        { ...data },
+        { new: true }).then(async (_data) => {
 
-            if (!data)
+            if (!_data)
                 return res.status(404).json({
                     error: {
                         errCode: ERRORS.NOT_FOUND,
@@ -73,10 +103,11 @@ exports.updateVehicles = async (req, res, next) => {
                 })
             return res.status(201).json({
                 message: 'Vehicles data updated successfully',
-                payload: data
+                payload: _data
             })
 
         }).catch((err) => {
+            console.log('err', err)
             return res.status(404).json({
                 error: {
                     errCode: ERRORS.SOMETHING_WRONG,
@@ -88,10 +119,9 @@ exports.updateVehicles = async (req, res, next) => {
 
 
 exports.getVehicles = async (req, res, next) => {
-    const {
-        driverId,
-        vehicleId
-    } = req.query;
+
+    const driverId = req.query.driverId || '';
+    const vehicleId = req.query.vehicleId || '';
 
     let findQuery = {}
     if (vehicleId != '' && driverId != '') {
@@ -110,7 +140,6 @@ exports.getVehicles = async (req, res, next) => {
     }
 
 
-    console.log('findQuery', findQuery)
     try {
         const resp = await Vehicles.find(findQuery)
         if (!resp)
@@ -136,3 +165,43 @@ exports.getVehicles = async (req, res, next) => {
     }
 }
 
+exports.deleteVehicles = async (req, res, next) => {
+    const {
+        id
+    } = req.params;
+
+    const isE = isEmpty(id);
+    if (isE)
+        return res.status(200).json(isE);
+
+    const isinvalidId = isInalidMongoDBid(id)
+    if (isinvalidId)
+        return res.status(200).json(isinvalidId)
+
+
+    return await Vehicles.deleteOne({
+        _id: id
+    }).then(async (data) => {
+        console.log('data', data)
+        if (!data)
+            return res.status(404).json({
+                error: {
+                    errCode: ERRORS.NOT_FOUND,
+                    errMessage: "Vehicles does not exists"
+                }
+            })
+        return res.status(201).json({
+            message: 'Vehicles data deleted successfully',
+            payload: data
+        })
+
+    }).catch((err) => {
+        console.log('err', err)
+        return res.status(404).json({
+            error: {
+                errCode: ERRORS.SOMETHING_WRONG,
+                errMessage: "Something went wrong"
+            }
+        })
+    })
+}

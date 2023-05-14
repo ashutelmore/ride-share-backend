@@ -25,6 +25,11 @@ const rideSchema = new mongoose.Schema({
         required: true,
         default: ''
     },
+    note: {
+        type: String,
+        required: true,
+        default: ''
+    },
     distance: {
         type: Number,
         required: true,
@@ -32,7 +37,6 @@ const rideSchema = new mongoose.Schema({
     },
     duration: {//sec
         type: Number,
-        required: true,
         default: ''
     },
     pricePerKM: {//sec

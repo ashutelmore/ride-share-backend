@@ -24,7 +24,7 @@ exports.isInalidMongoDBid = (id) => {
     return {
         error: {
             errCode: ERRORS.SOMETHING_WRONG,
-            errMessage: "user id is not valid or not found"
+            errMessage: "id is not valid or not found"
         }
     };
 }

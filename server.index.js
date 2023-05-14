@@ -11,9 +11,12 @@ const app = express()
 app.use(express.json())
 // app.use(express.urlencoded())
 app.use(cors())
-
+app.use(express.static(`${__dirname}/public`));
 //routes
 const Users = require('./routes/Users')
+const Vehicles = require('./routes/Vehicles')
+const Rides = require('./routes/Rides')
+const Bookings = require('./routes/Bookings')
 
 //mongoDB
 
@@ -38,6 +41,9 @@ app.get('/', (req, res) => [
     })
 ])
 app.use('/api', Users)
+app.use('/api', Vehicles)
+app.use('/api', Rides)
+app.use('/api', Bookings)
 
 //port
 

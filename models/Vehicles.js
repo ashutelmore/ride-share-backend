@@ -8,17 +8,16 @@ const vehicleSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Users'
     },
+    isAvailableForBook: {
+        type: Boolean,
+        default: null
+    },
     vehicleName: {
         type: String,
         trim: true,
         default: ""
     },
     type: {
-        type: String,
-        trim: true,
-        default: ""
-    },
-    company: {
         type: String,
         trim: true,
         default: ""
@@ -32,11 +31,11 @@ const vehicleSchema = new Schema({
         default: ""
     },
     vehicleNumber: {
-        type: Number,
+        type: String,
         default: ""
     },
     descp: {
-        type: Number,
+        type: String,
         default: ""
     },
     polices: {
