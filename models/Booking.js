@@ -31,6 +31,10 @@ const bookingSchema = new mongoose.Schema({
     required: true,
     default: ''
   },
+  isPrivateBooking: {
+    type: Boolean,
+    default: null
+  },
   // distance: {
   //   type: Number,
   //   default: 0
@@ -51,7 +55,7 @@ const bookingSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['pending', 'confirmed', 'ongoing', 'completed', 'cancelled'],
+    enum: ['pending', 'accepted', 'rejected', 'completed', 'cancelled'],
     default: 'pending'
   },
   notes: {
@@ -65,3 +69,6 @@ const bookingSchema = new mongoose.Schema({
 const Booking = mongoose.model('Booking', bookingSchema);
 
 module.exports = Booking;
+/*
+accepted 
+*/

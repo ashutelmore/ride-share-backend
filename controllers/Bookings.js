@@ -1,5 +1,5 @@
 const { ERRORS } = require('../helper/constants');
-const { isEmpty, isInalidMongoDBid } = require('../helper/helper');
+const { isEmpty, isInalidMongoDBid, isEmptyObj } = require('../helper/helper');
 const Bookings = require('../models/Booking');
 
 
@@ -80,7 +80,7 @@ exports.updateBookings = async (req, res, next) => {
 }
 
 
-exports.getBookings = async (req, res, next) => {
+exports.getOneBookings = async (req, res, next) => {
 
     const passangerId = req.query.passangerId || '';
     const driverId = req.query.driverId || '';
@@ -108,11 +108,18 @@ exports.getBookings = async (req, res, next) => {
             _id: bookingId
         }
     }
-
+    if (isEmptyObj(findQuery))
+        return res.status(201).json({
+            message: 'Bookings fetch successfully',
+            payload: []
+        })
 
     console.log('findQuery booking', findQuery)
     try {
         const resp = await Bookings.find(findQuery)
+            .sort({ updatedAt: -1 })
+            .populate('driverId')
+            .populate('passangerId')
         if (!resp)
             return res.status(404).json({
                 error: {
@@ -127,6 +134,7 @@ exports.getBookings = async (req, res, next) => {
         })
 
     } catch (error) {
+        console.log('error', error)
         return res.status(500).json({
             error: {
                 errCode: ERRORS.SOMETHING_WRONG,
@@ -135,4 +143,116 @@ exports.getBookings = async (req, res, next) => {
         })
     }
 }
+exports.getBookings = async (req, res, next) => {
+
+    const passangerId = req.query.passangerId || '';
+    const driverId = req.query.driverId || '';
+    const vehicleId = req.query.vehicleId || '';
+    const rideId = req.query.rideId || '';
+    const bookingId = req.query.bookingId || '';
+    const role = req.query.role || '';
+
+
+    console.log('req.query', req.query)
+
+
+    let findQuery = {}
+    if (!isEmpty(driverId, rideId)) {
+        findQuery = {
+            driverId: driverId,
+            rideId: rideId
+        }
+    } else if (!isEmpty(passangerId, rideId)) {
+        findQuery = {
+            passangerId: passangerId,
+            rideId: rideId
+        }
+    } else if (!isEmpty(passangerId)) {
+        findQuery = {
+            passangerId: passangerId
+        }
+    } else if (!isEmpty(bookingId)) {
+        findQuery = {
+            _id: bookingId
+        }
+    }
+    if (!isEmpty(role)) {
+        findQuery = {}
+    } else if (isEmptyObj(findQuery))
+        return res.status(201).json({
+            message: 'Bookings fetch successfully',
+            payload: []
+        })
+
+    console.log('findQuery booking', findQuery)
+    try {
+        const resp = await Bookings.find(findQuery)
+            .sort({ updatedAt: -1 })
+            .populate('driverId')
+            .populate('passangerId')
+        if (!resp)
+            return res.status(404).json({
+                error: {
+                    errCode: ERRORS.NOT_FOUND,
+                    errMessage: "Bookings not exists"
+                }
+            })
+
+        return res.status(201).json({
+            message: 'Bookings fetch successfully',
+            payload: resp
+        })
+
+    } catch (error) {
+        console.log('error', error)
+        return res.status(500).json({
+            error: {
+                errCode: ERRORS.SOMETHING_WRONG,
+                errMessage: "Something went wrong"
+            }
+        })
+    }
+}
+
+exports.deleteBookings = async (req, res, next) => {
+    const {
+        id
+    } = req.params;
+
+    const isE = isEmpty(id);
+    if (isE)
+        return res.status(200).json(isE);
+
+    const isinvalidId = isInalidMongoDBid(id)
+    if (isinvalidId)
+        return res.status(200).json(isinvalidId)
+
+
+    return await Bookings.deleteOne({
+        _id: id
+    }).then(async (data) => {
+        console.log('data', data)
+        if (!data)
+            return res.status(404).json({
+                error: {
+                    errCode: ERRORS.NOT_FOUND,
+                    errMessage: "Vehicles does not exists"
+                }
+            })
+        return res.status(201).json({
+            message: 'Vehicles data deleted successfully',
+            payload: data
+        })
+
+    }).catch((err) => {
+        console.log('err', err)
+        return res.status(404).json({
+            error: {
+                errCode: ERRORS.SOMETHING_WRONG,
+                errMessage: "Something went wrong"
+            }
+        })
+    })
+}
+
 

@@ -71,6 +71,21 @@ const userSchema = new Schema({
     timestamps: true
 });
 
+userSchema.pre('deleteOne', async function (next) {
+    console.log("deleteOne from user pre")
+    const id = this.getQuery()["_id"];
+
+    console.log('id', id)
+    try {
+        await mongoose.model('Vehicle').deleteMany({ driverId: id })
+        await mongoose.model('Ride').deleteMany({ driverId: id })
+        await mongoose.model('Booking').deleteMany({ passangerId: id })
+    } catch (error) {
+        console.log('error pre vehicle', error)
+    }
+    next()
+})
+
 
 
 module.exports = mongoose.model('UserDetails', userSchema);

@@ -1,12 +1,13 @@
 
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const Rides = require('./Rides');
 
 const vehicleSchema = new Schema({
 
     driverId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Users'
+        ref: 'UserDetails'
     },
     isAvailableForBook: {
         type: Boolean,
@@ -63,5 +64,17 @@ const vehicleSchema = new Schema({
 });
 
 
+vehicleSchema.pre('deleteOne', async function (next) {
+
+    const vehicleId = this.getQuery()["_id"];
+
+    console.log('vehicleId', vehicleId)
+    try {
+        await mongoose.model('Ride').deleteMany({ vehicleId: vehicleId })
+    } catch (error) {
+        console.log('error pre vehicle', error)
+    }
+    next()
+})
 
 module.exports = mongoose.model('Vehicle', vehicleSchema);

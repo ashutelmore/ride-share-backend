@@ -116,7 +116,7 @@ exports.getRides = async (req, res, next) => {
         }
     }
 
-
+    console.log('findQuery', findQuery)
     try {
         const resp = await Rides.find(findQuery)
             .populate('driverId')
@@ -150,7 +150,8 @@ exports.searchRides = async (req, res, next) => {
     const desti = req.query.desti || '';
     const start = req.query.start || '';
     const end = req.query.end || '';
-
+    const type = req.query.type || 'ride';
+    const limit = req.query.limit || 50;
 
     console.log('req.query', req.query)
     let findQuery = {}
@@ -181,15 +182,36 @@ exports.searchRides = async (req, res, next) => {
     }
 
     console.log('findQuery', findQuery)
+
+
+
     try {
-        const resp = await Rides.find(findQuery)
-            .populate('driverId')
-            .populate('vehicleId')
+        let resp
+
+        if (type == 'ride') {
+            resp = await Rides.find(findQuery)
+                .limit(limit)
+                .populate('driverId')
+                .populate('vehicleId')
+
+        } else if (type == 'vehicle') {
+            resp = await Rides.find(findQuery)
+                .limit(limit)
+                .populate('driverId')
+                .populate({
+                    path: 'vehicleId',
+                    match: { isAvailableForBook: true },
+                })
+
+
+            resp = resp.filter(e => e.vehicleId != null)
+        }
+
         if (!resp)
             return res.status(404).json({
                 error: {
                     errCode: ERRORS.NOT_FOUND,
-                    errMessage: "Rides not exists"
+                    errMessage: "Rides not exists or something went wrong"
                 }
             })
 

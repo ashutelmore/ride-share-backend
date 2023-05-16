@@ -122,6 +122,8 @@ exports.getVehicles = async (req, res, next) => {
 
     const driverId = req.query.driverId || '';
     const vehicleId = req.query.vehicleId || '';
+    const limit = req.query.limit || 20;
+    const type = req.query.type || '';
 
     let findQuery = {}
     if (vehicleId != '' && driverId != '') {
@@ -137,11 +139,15 @@ exports.getVehicles = async (req, res, next) => {
         findQuery = {
             driverId: driverId,
         }
+    } else if (type == 'isAvailableForBook') {
+        findQuery = {
+            isAvailableForBook: true
+        }
     }
 
-
+    console.log('findQuery', findQuery)
     try {
-        const resp = await Vehicles.find(findQuery)
+        const resp = await Vehicles.find(findQuery).limit(limit)
         if (!resp)
             return res.status(404).json({
                 error: {
@@ -156,6 +162,7 @@ exports.getVehicles = async (req, res, next) => {
         })
 
     } catch (error) {
+        console.log('error', error)
         return res.status(500).json({
             error: {
                 errCode: ERRORS.SOMETHING_WRONG,
@@ -182,7 +189,7 @@ exports.deleteVehicles = async (req, res, next) => {
     return await Vehicles.deleteOne({
         _id: id
     }).then(async (data) => {
-        console.log('data', data)
+        console.log('data control', data)
         if (!data)
             return res.status(404).json({
                 error: {

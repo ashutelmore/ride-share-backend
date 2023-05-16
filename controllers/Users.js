@@ -98,9 +98,8 @@ exports.getAllUsers = async (req, res, next) => {
         findQuery = { _id: id }
     }
     console.log('findQuery', findQuery)
-    console.log('req.query', req.query)
     try {
-        const users = await Users.find(findQuery)
+        const users = await Users.find(findQuery).sort({ updatedAt: -1 })
 
         if (!users)
             return res.status(404).json({
@@ -203,3 +202,43 @@ exports.updateUsers = async (req, res, next) => {
         })
 }
 
+exports.deleteUser = async (req, res, next) => {
+    const {
+        id
+    } = req.params;
+
+    const isE = isEmpty(id);
+    if (isE)
+        return res.status(200).json(isE);
+
+    const isinvalidId = isInalidMongoDBid(id)
+    if (isinvalidId)
+        return res.status(200).json(isinvalidId)
+
+
+    return await Users.deleteOne({
+        _id: id
+    }).then(async (data) => {
+        console.log('data', data)
+        if (!data)
+            return res.status(404).json({
+                error: {
+                    errCode: ERRORS.NOT_FOUND,
+                    errMessage: "User does not exists"
+                }
+            })
+        return res.status(201).json({
+            message: 'User data deleted successfully',
+            payload: data
+        })
+
+    }).catch((err) => {
+        console.log('err', err)
+        return res.status(404).json({
+            error: {
+                errCode: ERRORS.SOMETHING_WRONG,
+                errMessage: "Something went wrong"
+            }
+        })
+    })
+}
