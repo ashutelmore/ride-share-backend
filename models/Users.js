@@ -15,29 +15,24 @@ const userSchema = new Schema({
     },
     email: {
         type: String,
-        unique: true,
         default: ""
 
     },
     address: {
         streetAdd: {
             type: String,
-            unique: true,
             default: ""
         },
         city: {
             type: String,
-            unique: true,
             default: ""
         },
         state: {
             type: String,
-            unique: true,
             default: ""
         },
         pin: {
             type: String,
-            unique: true,
             default: ""
         },
     },
