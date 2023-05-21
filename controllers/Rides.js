@@ -6,7 +6,7 @@ exports.createRides = async (req, res) => {
         payload
     } = req.body;
 
-
+    console.log('req.body', req.body)
     if (!payload)
         return res.status(500).json({
             error: {
@@ -157,55 +157,74 @@ exports.searchRides = async (req, res, next) => {
     let findQuery = {}
 
 
-    if (!isEmpty(start, end, pickup, desti)) {
-        findQuery = {
-            startDate: { $gte: start },
-            endDate: { $lte: end },
-            pickupLocation: { $regex: pickup, $options: "i" },
-            destination: { $regex: desti, $options: "i" },
-        }
-    } else if (!isEmpty(start, end) && isEmpty(pickup, desti)) {
-        findQuery = {
+    // if (!isEmpty(start, end, pickup, desti)) {
+    //     findQuery = {
+    //         startDate: { $gte: start },
+    //         endDate: { $lte: end },
+    //         pickupLocation: { $regex: pickup, $options: "i" },
+    //         destination: { $regex: desti, $options: "i" },
+    //     }
+    // } else if (!isEmpty(start, end) && isEmpty(pickup, desti)) {
+    //     findQuery = {
 
-            $and: [
-                { startDate: { $gte: start } }
-                , { endDate: { $lte: end } }
-            ]
-            // startDate: { $gte: start },
-            // endDate: { $lte: end },
-        }
-    } else if (isEmpty(start, end) && !isEmpty(pickup, desti)) {
+    //         $and: [
+    //             { startDate: { $gte: start } }
+    //             , { endDate: { $lte: end } }
+    //         ]
+    //         // startDate: { $gte: start },
+    //         // endDate: { $lte: end },
+    //     }
+    // } else if (isEmpty(start, end) && !isEmpty(pickup, desti)) {
+    //     findQuery = {
+    //         pickupLocation: { $regex: pickup, $options: "i" },
+    //         destination: { $regex: desti, $options: "i" },
+    //     }
+    // }
+
+
+
+
+
+    if (type == 'vehicle') {
         findQuery = {
-            pickupLocation: { $regex: pickup, $options: "i" },
-            destination: { $regex: desti, $options: "i" },
+            isAvailableForBook: true
+        }
+        if (!isEmpty(pickup)) {
+            findQuery = {
+                pickupLocation: { $regex: pickup, $options: "i" },
+                isAvailableForBook: true
+            }
+        }
+    } else {
+        findQuery = {
+            isAvailableForBook: false
+        }
+        if (!isEmpty(pickup, desti)) {
+            findQuery = {
+                pickupLocation: { $regex: pickup, $options: "i" },
+                destination: { $regex: desti, $options: "i" },
+                isAvailableForBook: false
+            }
+        } else if (!isEmpty(pickup)) {
+            findQuery = {
+                pickupLocation: { $regex: pickup, $options: "i" },
+                isAvailableForBook: false
+            }
+        } else if (!isEmpty(desti)) {
+            findQuery = {
+                destination: { $regex: desti, $options: "i" },
+                isAvailableForBook: false
+            }
         }
     }
 
     console.log('findQuery', findQuery)
 
-
-
     try {
-        let resp
-
-        if (type == 'ride') {
-            resp = await Rides.find(findQuery)
-                .limit(limit)
-                .populate('driverId')
-                .populate('vehicleId')
-
-        } else if (type == 'vehicle') {
-            resp = await Rides.find(findQuery)
-                .limit(limit)
-                .populate('driverId')
-                .populate({
-                    path: 'vehicleId',
-                    match: { isAvailableForBook: true },
-                })
-
-
-            resp = resp.filter(e => e.vehicleId != null)
-        }
+        let resp = await Rides.find(findQuery)
+            .limit(limit)
+            .populate('driverId')
+            .populate('vehicleId')
 
         if (!resp)
             return res.status(404).json({

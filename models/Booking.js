@@ -4,31 +4,27 @@ const bookingSchema = new mongoose.Schema({
   passangerId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'UserDetails',
-    required: true
   },
   driverId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'UserDetails',
-    required: true
   },
   vehicleId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Vehicle',
-    required: true
   },
   rideId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Ride',
-    required: true
   },
   pickupLocation: {
     type: String,
-    required: true,
+
     default: ''
   },
   destination: {
     type: String,
-    required: true,
+
     default: ''
   },
   isPrivateBooking: {
@@ -41,7 +37,7 @@ const bookingSchema = new mongoose.Schema({
   // },
   // duration: {
   //   type: Number,
-  //   required: true,
+  //   
   //   default: 0
   // },
   numSits: {

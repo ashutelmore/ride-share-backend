@@ -18,6 +18,10 @@ const userSchema = new Schema({
         default: ""
 
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
     address: {
         streetAdd: {
             type: String,

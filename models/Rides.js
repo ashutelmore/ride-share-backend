@@ -17,40 +17,41 @@ const rideSchema = new mongoose.Schema({
     }],
     pickupLocation: {
         type: String,
-        required: true,
         default: ''
     },
     destination: {
         type: String,
-        required: true,
         default: ''
+    },
+    isAvailableForBook: {
+        type: Boolean,
+        default: null
     },
     note: {
         type: String,
-        required: true,
         default: ''
     },
-    distance: {
+    sits: {
         type: Number,
-        required: true,
-        default: ''
+        default: ""
     },
+    // distance: {
+    //     type: Number,
+    //     default: ''
+    // },
     // duration: {//sec
     //     type: Number,
     //     default: ''
     // },
-    pricePerKM: {//sec
+    price: {//sec
         type: Number,
-        required: true,
         default: ''
     },
     startDate: {
         type: Date,
-        required: true
     },
     endDate: {
         type: Date,
-        required: true
     },
     isAllow: {
         chat: {
@@ -69,10 +70,14 @@ const rideSchema = new mongoose.Schema({
             type: Boolean,
             default: null
         },
+        ladies: {
+            type: Boolean,
+            default: null
+        },
     },
     status: {
         type: String,
-        enum: ['completed', 'cancelled', 'in progress', 'pending', 'approved'],
+        enum: ['pending', 'accepted', 'rejected', 'completed', 'cancelled'],
         default: 'pending'
     },
 }, {

@@ -7,6 +7,7 @@ exports.createVehicles = async (req, res) => {
     const {
         payload
     } = req.body;
+    console.log('req.body', req.body)
 
     let data = {
         ...JSON.parse(payload),
@@ -60,7 +61,7 @@ exports.updateVehicles = async (req, res, next) => {
     } = req.params;
 
     console.log('req.body', req.body)
-    console.log('req.params', req.params)
+    console.log('payload', payload)
     const isE = isEmpty(id);
     if (isE)
         return res.status(200).json(isE);
@@ -76,9 +77,11 @@ exports.updateVehicles = async (req, res, next) => {
                 errMessage: "Something went wrong with data"
             }
         })
+
     let data = {
         ...JSON.parse(payload),
     }
+    console.log('data', data)
     if (req.file) {
         data = {
             ...data,
@@ -122,6 +125,7 @@ exports.getVehicles = async (req, res, next) => {
 
     const driverId = req.query.driverId || '';
     const vehicleId = req.query.vehicleId || '';
+    const status = req.query.status || '';
     const limit = req.query.limit || 20;
     const type = req.query.type || '';
 
@@ -135,6 +139,11 @@ exports.getVehicles = async (req, res, next) => {
         findQuery = {
             _id: vehicleId,
         }
+    } else if (driverId != '' && status != '') {
+        findQuery = {
+            driverId: driverId,
+            status: status,
+        }
     } else if (driverId != '') {
         findQuery = {
             driverId: driverId,
@@ -147,7 +156,9 @@ exports.getVehicles = async (req, res, next) => {
 
     console.log('findQuery', findQuery)
     try {
-        const resp = await Vehicles.find(findQuery).limit(limit)
+        const resp = await Vehicles.find(findQuery)
+            .limit(limit)
+            .populate('driverId')
         if (!resp)
             return res.status(404).json({
                 error: {

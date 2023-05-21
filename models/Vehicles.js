@@ -9,10 +9,10 @@ const vehicleSchema = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'UserDetails'
     },
-    isAvailableForBook: {
-        type: Boolean,
-        default: null
-    },
+    // isAvailableForBook: {
+    //     type: Boolean,
+    //     default: null
+    // },
     vehicleName: {
         type: String,
         trim: true,
@@ -23,14 +23,14 @@ const vehicleSchema = new Schema({
         trim: true,
         default: ""
     },
-    sits: {
-        type: Number,
-        default: ""
-    },
-    pricePerKm: {//per km
-        type: Number,
-        default: ""
-    },
+    // sits: {
+    //     type: Number,
+    //     default: ""
+    // },
+    // pricePerKm: {//per km
+    //     type: Number,
+    //     default: ""
+    // },
     vehicleNumber: {
         type: String,
         default: ""
@@ -38,6 +38,19 @@ const vehicleSchema = new Schema({
     descp: {
         type: String,
         default: ""
+    },
+    rcNumber: {
+        type: String,
+        default: ""
+    },
+    aadharNumber: {
+        type: String,
+        default: ""
+    },
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
     },
     polices: {
         isLicense: {

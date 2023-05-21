@@ -57,6 +57,14 @@ exports.updateBookings = async (req, res, next) => {
         { ...payload },
         { new: true }).then(async (data) => {
 
+
+
+
+
+
+
+
+
             if (!data)
                 return res.status(404).json({
                     error: {
@@ -175,7 +183,12 @@ exports.getBookings = async (req, res, next) => {
         findQuery = {
             _id: bookingId
         }
+    } else if (!isEmpty(rideId)) {
+        findQuery = {
+            rideId: rideId
+        }
     }
+
     if (!isEmpty(role)) {
         findQuery = {}
     } else if (isEmptyObj(findQuery))
@@ -190,6 +203,7 @@ exports.getBookings = async (req, res, next) => {
             .sort({ updatedAt: -1 })
             .populate('driverId')
             .populate('passangerId')
+            .populate('rideId')
         if (!resp)
             return res.status(404).json({
                 error: {

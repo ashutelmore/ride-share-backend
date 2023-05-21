@@ -1,5 +1,5 @@
 var express = require('express');
-const { register, login, getAllUsers, updateUserDetails, getUserData, updateUsers, deleteUser } = require('../controllers/Users');
+const { register, login, getAllUsers, updateUserDetails, getUserData, updateUsers, deleteUser, verifyEmail, resendVerification, forgetPassword } = require('../controllers/Users');
 var router = express.Router();
 
 
@@ -7,8 +7,9 @@ var router = express.Router();
 router.post('/register', register)
 router.post('/login', login)
 
-
-
+router.get('/verify/:email/:token', verifyEmail)
+router.post('/resendVerification', resendVerification)
+router.post('/forgetPassword', forgetPassword)
 
 router.put('/upadateUserDetails', updateUsers)
 
