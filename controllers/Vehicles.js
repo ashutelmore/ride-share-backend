@@ -7,11 +7,10 @@ exports.createVehicles = async (req, res) => {
     const {
         payload
     } = req.body;
-    console.log('req.body', req.body)
-
     let data = {
         ...JSON.parse(payload),
     }
+    console.log('req.file', req.file)
     if (req.file) {
         data = {
             ...data,
@@ -59,9 +58,6 @@ exports.updateVehicles = async (req, res, next) => {
     const {
         id
     } = req.params;
-
-    console.log('req.body', req.body)
-    console.log('payload', payload)
     const isE = isEmpty(id);
     if (isE)
         return res.status(200).json(isE);
@@ -81,7 +77,6 @@ exports.updateVehicles = async (req, res, next) => {
     let data = {
         ...JSON.parse(payload),
     }
-    console.log('data', data)
     if (req.file) {
         data = {
             ...data,
@@ -154,7 +149,6 @@ exports.getVehicles = async (req, res, next) => {
         }
     }
 
-    console.log('findQuery', findQuery)
     try {
         const resp = await Vehicles.find(findQuery)
             .limit(limit)

@@ -4,6 +4,7 @@ const Users = require("../models/Users")
 const jwt = require('jsonwebtoken');
 const JWT_KEY_MAIL = process.env.JWT_KEY_MAIL
 const FRONTEND_END_POINT = process.env.FRONTEND_END_POINT
+const SENDER_GMAIL = process.env.SENDER_GMAIL
 
 const transporter = require('../middlewares/SendMail')
 
@@ -47,7 +48,7 @@ exports.register = async (req, res, next) => {
 
     try {
         let info = await transporter.sendMail({
-            from: '"EzyRidez 👻"<1inall200@gmail.com>', // sender address
+            from: `EzyRidez ${SENDER_GMAIL}`, // sender address
             to: `${email}`, // list of receivers
             subject: "Hello ✔", // Subject line
             text: `Hi! There, You have recently visited 
@@ -115,7 +116,7 @@ exports.resendVerification = async (req, res, next) => {
 
             try {
                 let info = await transporter.sendMail({
-                    from: '"EzyRidez 👻"<1inall200@gmail.com>', // sender address
+                    from: `EzyRidez ${SENDER_GMAIL}`, // sender address
                     to: `${email}`, // list of receivers
                     subject: "Hello ✔", // Subject line
                     text: `Hi! There, You have recently visited 
@@ -171,7 +172,7 @@ exports.forgetPassword = async (req, res, next) => {
 
             try {
                 let info = await transporter.sendMail({
-                    from: '"EzyRidez 👻"<1inall200@gmail.com>', // sender address
+                    from: `EzyRidez ${SENDER_GMAIL}`, // sender address
                     to: `${email}`, // list of receivers
                     subject: "Hello ✔", // Subject line
                     html: `Hi! There, Here is your credential
